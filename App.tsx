@@ -1,16 +1,16 @@
 import "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
-import PanGestureExample from "./components/pan-gesture/PanGestureExample";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import MainBottomNavigation from "./components/blur-bottomTab/main";
+import ParallaxCarousel from "./components/parallax-carousel";
 
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.container}>
         {/* <PanGestureExample /> */}
-        <MainBottomNavigation />
+        {/* <MainBottomNavigation /> */}
+        <ParallaxCarousel />
         <StatusBar style="auto" />
       </View>
     </GestureHandlerRootView>
