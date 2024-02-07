@@ -1,6 +1,4 @@
 import {
-  Dimensions,
-  SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
@@ -9,18 +7,15 @@ import {
 } from "react-native";
 import Header from "./components/Header";
 import BottomTab from "./components/BottomTab";
-import {
-  Gesture,
-  GestureDetector,
-  GestureHandlerRootView,
-} from "react-native-gesture-handler";
 import MeetView from "./components/MeetView";
 import { height, width } from "./constants";
 import Animated, {
+  Easing,
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withTiming,
 } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
 import {
@@ -32,78 +27,71 @@ const Colors = {
   primaryBg: "#0f172a",
 };
 
-const containerHeight = height * 0.7;
-
 type ContextType = {
   translateX: number;
   translateY: number;
 };
 
+const containerHeight = height * 0.7;
+
 export default function GoogleMeetView() {
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
 
+  // TODO: Calculate the distance from the context values
   const panGestureEvent = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
     ContextType
   >({
-    onStart: (event) => {
-      translateX.value = event.translationX;
-      translateY.value = event.translationY;
+    onStart: (event, context: ContextType) => {
+      context.translateX = translateX.value;
+      context.translateY = translateY.value;
     },
-    onActive: (event) => {
-      translateX.value = event.translationX;
-      translateY.value = event.translationY;
+    onActive: (event, context: ContextType) => {
+      translateX.value = event.translationX + context.translateX;
+      translateY.value = event.translationY + context.translateY;
     },
-    onEnd: () => {
-      const distance = Math.sqrt(translateX.value ** 2 + translateY.value ** 2);
-      translateX.value = withSpring(0);
-      translateY.value = withSpring(0);
+    onFinish: (event) => {
+      // const distance = Math.sqrt(translateX.value ** 2 + translateY.value ** 2);
+      console.log(event.translationX);
+      if (
+        event.translationY > containerHeight * 0.1 &&
+        event.translationX > width * 0.1
+      ) {
+        console.log("RIGHT BOTTOM");
+        translateY.value = withSpring(containerHeight * 0.3);
+        translateX.value = withSpring(width * 0.3);
+      }
+      if (
+        event.translationY > containerHeight * 0.1 &&
+        event.translationX < -width * 0.1
+      ) {
+        console.log("LEFT BOTTOM");
+        translateY.value = withSpring(containerHeight * 0.3);
+        translateX.value = withSpring(-width * 0.3);
+      }
+      if (
+        event.translationY < -containerHeight * 0.1 &&
+        event.translationX > width * 0.1
+      ) {
+        console.log("RIGHT TOP");
+        translateY.value = withSpring(-containerHeight * 0.4);
+        translateX.value = withSpring(width * 0.3);
+      }
+      if (
+        event.translationY < -containerHeight * 0.1 &&
+        event.translationX < -width * 0.1
+      ) {
+        console.log("LEFT TOP");
+        translateY.value = withSpring(-containerHeight * 0.4);
+        translateX.value = withSpring(-width * 0.3);
+      } else {
+        // default position
+        translateY.value = withSpring(containerHeight * 0.3);
+        translateX.value = withSpring(width * 0.3);
+      }
     },
   });
-
-  // const panGestureEvent = Gesture.Pan()
-  //   .onUpdate((event) => {
-  //     if (event) {
-  //       translateX.value = event.translationX;
-  //       translateY.value = event.translationY;
-  //     }
-  //   })
-  //   .onFinalize((event) => {
-  //     if (
-  //       event.translationY > containerHeight * 0.1 &&
-  //       event.translationX > width * 0.1
-  //     ) {
-  //       // RIGHT BOTTOM
-  //       translateY.value = withSpring(containerHeight * 0.3);
-  //       translateX.value = withSpring(width * 0.3);
-  //     } else if (
-  //       event.translationY > containerHeight * 0.1 &&
-  //       event.translationX < -width * 0.1
-  //     ) {
-  //       // LEFT BOTTOM
-  //       translateY.value = withSpring(containerHeight * 0.3);
-  //       translateX.value = withSpring(-width * 0.3);
-  //     } else if (
-  //       event.translationY < -containerHeight * 0.1 &&
-  //       event.translationX > width * 0.1
-  //     ) {
-  //       // RIGHT TOP
-  //       translateY.value = withSpring(-containerHeight * 0.4);
-  //       translateX.value = withSpring(width * 0.3);
-  //     } else if (
-  //       event.translationY < -containerHeight * 0.1 &&
-  //       event.translationX < -width * 0.1
-  //     ) {
-  //       // LEFT TOP
-  //       translateY.value = withSpring(-containerHeight * 0.4);
-  //       translateX.value = withSpring(-width * 0.3);
-  //     } else {
-  //       // DEFAULT POSITION
-  //       translateY.value = withSpring(containerHeight * 0.3);
-  //       translateX.value = withSpring(width * 0.3);
-  //     }
-  //   });
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
