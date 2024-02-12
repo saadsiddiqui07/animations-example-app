@@ -10,12 +10,10 @@ import BottomTab from "./components/BottomTab";
 import MeetView from "./components/MeetView";
 import { height, width } from "./constants";
 import Animated, {
-  Easing,
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-  withTiming,
 } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
 import {
@@ -37,7 +35,6 @@ const containerHeight = height * 0.7;
 export default function GoogleMeetView() {
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
-
   // TODO: Calculate the distance from the context values
   const panGestureEvent = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
@@ -52,44 +49,44 @@ export default function GoogleMeetView() {
       translateY.value = event.translationY + context.translateY;
     },
     onFinish: (event) => {
-      // const distance = Math.sqrt(translateX.value ** 2 + translateY.value ** 2);
       console.log(event.translationX);
-      if (
-        event.translationY > containerHeight * 0.1 &&
-        event.translationX > width * 0.1
-      ) {
-        console.log("RIGHT BOTTOM");
-        translateY.value = withSpring(containerHeight * 0.3);
-        translateX.value = withSpring(width * 0.3);
-      }
-      if (
-        event.translationY > containerHeight * 0.1 &&
-        event.translationX < -width * 0.1
-      ) {
-        console.log("LEFT BOTTOM");
-        translateY.value = withSpring(containerHeight * 0.3);
-        translateX.value = withSpring(-width * 0.3);
-      }
-      if (
-        event.translationY < -containerHeight * 0.1 &&
-        event.translationX > width * 0.1
-      ) {
-        console.log("RIGHT TOP");
-        translateY.value = withSpring(-containerHeight * 0.4);
-        translateX.value = withSpring(width * 0.3);
-      }
-      if (
-        event.translationY < -containerHeight * 0.1 &&
-        event.translationX < -width * 0.1
-      ) {
-        console.log("LEFT TOP");
-        translateY.value = withSpring(-containerHeight * 0.4);
-        translateX.value = withSpring(-width * 0.3);
-      } else {
-        // default position
-        translateY.value = withSpring(containerHeight * 0.3);
-        translateX.value = withSpring(width * 0.3);
-      }
+      // const distance = Math.sqrt(translateX.value ** 2 + translateY.value ** 2);
+      // if (
+      //   event.translationY > containerHeight * 0.1 &&
+      //   event.translationX > width * 0.1
+      // ) {
+      //   console.log("RIGHT BOTTOM");
+      //   translateY.value = withSpring(containerHeight * 0.3);
+      //   translateX.value = withSpring(width * 0.3);
+      // }
+      // if (
+      //   event.translationY > containerHeight * 0.1 &&
+      //   event.translationX < -width * 0.1
+      // ) {
+      //   console.log("LEFT BOTTOM");
+      //   translateY.value = withSpring(containerHeight * 0.3);
+      //   translateX.value = withSpring(-width * 0.3);
+      // }
+      // if (
+      //   event.translationY < -containerHeight * 0.1 &&
+      //   event.translationX > width * 0.1
+      // ) {
+      //   console.log("RIGHT TOP");
+      //   translateY.value = withSpring(-containerHeight * 0.4);
+      //   translateX.value = withSpring(width * 0.3);
+      // }
+      // if (
+      //   event.translationY < -containerHeight * 0.1 &&
+      //   event.translationX < -width * 0.1
+      // ) {
+      //   console.log("LEFT TOP");
+      //   translateY.value = withSpring(-containerHeight * 0.4);
+      //   translateX.value = withSpring(-width * 0.3);
+      // } else {
+      //   // default position
+      // }
+      translateY.value = withSpring(containerHeight * 0.3);
+      translateX.value = withSpring(width * 0.3);
     },
   });
 
