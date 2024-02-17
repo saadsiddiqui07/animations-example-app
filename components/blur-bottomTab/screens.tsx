@@ -37,7 +37,7 @@ export const Home = () => {
             <Image
               key={index}
               source={{ uri: item }}
-              style={{ width: "100%", height: 200, borderRadius: 20 }}
+              style={{ width: "100%", height: 250, borderRadius: 20 }}
             />
           );
         }}

@@ -30,11 +30,16 @@ type ContextType = {
   translateY: number;
 };
 
-const containerHeight = height * 0.7;
+const CONTAINER_HEIGHT = height * 0.7;
+const CONTAINER_SCROLL_WIDTH = width * 0.7;
+
+console.log("HEIGHT: ", CONTAINER_HEIGHT * 0.5);
 
 export default function GoogleMeetView() {
-  const translateX = useSharedValue(0);
-  const translateY = useSharedValue(0);
+  const translateX = useSharedValue(width * 0.3);
+  const translateY = useSharedValue(CONTAINER_HEIGHT * 0.3);
+
+  // ISSUE: EVRERYTIME THE POSITION WILL SET TO ZERO AND ANY CALCULATION WILL MAKE IT TANGLED
   // TODO: Calculate the distance from the context values
   const panGestureEvent = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
@@ -49,26 +54,32 @@ export default function GoogleMeetView() {
       translateY.value = event.translationY + context.translateY;
     },
     onFinish: (event) => {
-      console.log(event.translationX);
+      // X will be 40%
+      console.log(event.translationY);
+      if (event.translationX < -CONTAINER_SCROLL_WIDTH * 0.4) {
+        console.log("LEFT BOTTOM");
+      } else {
+        console.log("RIGHT BOTTOM");
+      }
       // const distance = Math.sqrt(translateX.value ** 2 + translateY.value ** 2);
       // if (
-      //   event.translationY > containerHeight * 0.1 &&
+      //   event.translationY > CONTAINER_HEIGHT * 0.1 &&
       //   event.translationX > width * 0.1
       // ) {
       //   console.log("RIGHT BOTTOM");
-      //   translateY.value = withSpring(containerHeight * 0.3);
+      //   translateY.value = withSpring(CONTAINER_HEIGHT * 0.3);
       //   translateX.value = withSpring(width * 0.3);
       // }
       // if (
-      //   event.translationY > containerHeight * 0.1 &&
+      //   event.translationY > CONTAINER_HEIGHT * 0.1 &&
       //   event.translationX < -width * 0.1
       // ) {
       //   console.log("LEFT BOTTOM");
-      //   translateY.value = withSpring(containerHeight * 0.3);
+      //   translateY.value = withSpring(CONTAINER_HEIGHT * 0.3);
       //   translateX.value = withSpring(-width * 0.3);
       // }
       // if (
-      //   event.translationY < -containerHeight * 0.1 &&
+      //   event.translationY < -CONTAINER_HEIGHT * 0.1 &&
       //   event.translationX > width * 0.1
       // ) {
       //   console.log("RIGHT TOP");
@@ -85,8 +96,8 @@ export default function GoogleMeetView() {
       // } else {
       //   // default position
       // }
-      translateY.value = withSpring(containerHeight * 0.3);
-      translateX.value = withSpring(width * 0.3);
+      // translateY.value = withSpring(containerHeight * 0.3);
+      // translateX.value = withSpring(width * 0.3);
     },
   });
 
@@ -118,6 +129,10 @@ export default function GoogleMeetView() {
           <PanGestureHandler onGestureEvent={panGestureEvent}>
             <Animated.View style={[styles.contact, animatedStyle]}>
               <TouchableOpacity
+                onPress={() => {
+                  translateX.value = withSpring(width * 0.3);
+                  translateY.value = withSpring(CONTAINER_HEIGHT * 0.3);
+                }}
                 activeOpacity={0.8}
                 style={{
                   backgroundColor: "#64748b",
@@ -174,65 +189,6 @@ export default function GoogleMeetView() {
               </View>
             </Animated.View>
           </PanGestureHandler>
-          {/* <GestureDetector gesture={panGestureEvent}>
-              <Animated.View style={[styles.contact, animatedStyle]}>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  style={{
-                    backgroundColor: "#64748b",
-                    padding: 8,
-                    borderRadius: 999,
-                    alignSelf: "center",
-                    marginLeft: "auto",
-                  }}
-                >
-                  <Ionicons name="mic-off-outline" size={18} color={"white"} />
-                </TouchableOpacity>
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderRadius: 999,
-                  }}
-                >
-                  <Ionicons
-                    name="person-circle-outline"
-                    size={50}
-                    color={"white"}
-                  />
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text
-                    style={{ fontSize: 13, fontWeight: "bold", color: "white" }}
-                  >
-                    Saad
-                  </Text>
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    style={{
-                      backgroundColor: "#64748b",
-                      padding: 8,
-                      borderRadius: 999,
-                      alignSelf: "center",
-                      marginLeft: "auto",
-                    }}
-                  >
-                    <Ionicons
-                      name="ellipsis-vertical-sharp"
-                      size={18}
-                      color={"white"}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </Animated.View>
-            </GestureDetector> */}
         </View>
         <View style={{ marginTop: "auto" }}>
           <BottomTab />
