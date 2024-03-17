@@ -33,8 +33,6 @@ type ContextType = {
 const CONTAINER_HEIGHT = height * 0.7;
 const CONTAINER_SCROLL_WIDTH = width * 0.7;
 
-console.log("HEIGHT: ", CONTAINER_HEIGHT * 0.5);
-
 export default function GoogleMeetView() {
   const translateX = useSharedValue(width * 0.3);
   const translateY = useSharedValue(CONTAINER_HEIGHT * 0.3);
@@ -55,11 +53,14 @@ export default function GoogleMeetView() {
     },
     onFinish: (event) => {
       // X will be 40%
-      console.log(event.translationY);
       if (event.translationX < -CONTAINER_SCROLL_WIDTH * 0.4) {
         console.log("LEFT BOTTOM");
+        translateY.value = withSpring(CONTAINER_HEIGHT * 0.3);
+        translateX.value = withSpring(-width * 0.3);
       } else {
         console.log("RIGHT BOTTOM");
+        translateY.value = withSpring(CONTAINER_HEIGHT * 0.3);
+        translateX.value = withSpring(width * 0.3);
       }
       // const distance = Math.sqrt(translateX.value ** 2 + translateY.value ** 2);
       // if (
@@ -96,8 +97,6 @@ export default function GoogleMeetView() {
       // } else {
       //   // default position
       // }
-      // translateY.value = withSpring(containerHeight * 0.3);
-      // translateX.value = withSpring(width * 0.3);
     },
   });
 
