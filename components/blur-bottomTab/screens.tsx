@@ -24,6 +24,7 @@ export const Home = () => {
     <SafeAreaView style={styles.screen}>
       <FlatList
         data={data}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           flexGrow: 1,
           padding: 20,
